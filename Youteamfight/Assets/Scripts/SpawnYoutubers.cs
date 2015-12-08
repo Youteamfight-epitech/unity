@@ -5,7 +5,7 @@ public class SpawnYoutubers : MonoBehaviour {
 
 	public	bool			startSpawning;
 	public	float			gameDuration;
-	public	GameObject[]	YTBList;
+	public	Material[]		YTBList;
 	private	GameObject[]	spawnList;
 	private	float			countdown;
 	private float			timeSpawn;
@@ -54,7 +54,11 @@ public class SpawnYoutubers : MonoBehaviour {
 			//Choose randomly the spawn
 			randSpawn = (int)(Mathf.Round(Random.Range(0.0f, spawnList.Length - 1)));
 			//Instantiate the entity
-			Instantiate(YTBList[randYtb], spawnList[randSpawn].transform.position, Quaternion.identity);
+			spawnList[randSpawn].GetComponent<MeshRenderer>().material = YTBList[randYtb];
+			spawnList[randSpawn].GetComponent<Animator>().SetTrigger("play2");
+	//			Animation[0].wrapMode = WrapMode.Once;
+
+			//spawnList[randSpawn].GetComponent<Animator>().SetBool("play", false);
 			//Check if there is no entity left to spawn
 			if (allyToSpawn == 0 && enemyToSpawn == 0)
 				spawn = false;
