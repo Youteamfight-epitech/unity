@@ -13,6 +13,8 @@ public class GameController : MonoBehaviour {
 	public bool inTransition = false;
 	public float speed = 5.0f;
 
+	private TransitionText transit;
+
 	private Vector3 currentPosition;
 	private Vector3 previousPosition;
 	private Vector3 nextPosition;
@@ -33,6 +35,7 @@ public class GameController : MonoBehaviour {
 	// Load one lvl
 	void Start () {
 		text.text = "NOP";
+		transit = this.GetComponent<TransitionText>();
 		// get GameObject tagged gameController
 		gameController = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController>();
 
@@ -73,18 +76,16 @@ public class GameController : MonoBehaviour {
 		text.text = "Tap : " + nb;
 	}
 
+
+
+	void setTimer()
+	{
+	}
+
 	void Update() {
 
 
-		if (Input.GetMouseButtonDown(0)) {
-			setCounter(counter + 1);
-		}
-		/*if (Input.touchCount > 0) { //To make sure only one finger does the dTap
-			setCounter(counter + 1);
-		}*/
-
-		if (Input.GetAxis("Vertical") != 0 && !inTransition)
-		{
+		if (Input.GetMouseButtonDown(0) && !inTransition) {
 			setCounter(counter + 1);
 		}
 
@@ -92,8 +93,10 @@ public class GameController : MonoBehaviour {
 		// if the user use button /!\ MAY CHANGE to : if the game is over /!\
 		if (counter > 10 && !inTransition)
 		{
+
 			//set the transition on
 			inTransition = true;
+			transit.startTransit(1);
 			currentTime = 0f;
 			// start move the lvl
 			startLvl();
@@ -108,9 +111,10 @@ public class GameController : MonoBehaviour {
 			previousLvl.GetComponent<Transform>().position = Vector3.Lerp(currentPosition, previousPosition, perc);
 			currentLvl.GetComponent<Transform>().position = Vector3.Lerp(nextPosition, currentPosition, perc);
 			// if the move is ended : Generate the next lvl and go on normal mode
-			if (perc >= 1f) {
+			if (perc >= 1f && transit.isEnded()) {
 				nextGenerateLvl();
 				inTransition = false;
+
 			}
 		}
 	}
